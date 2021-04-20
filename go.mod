@@ -1,4 +1,4 @@
-module github.com/mohsanabbas/ms-cart
+module github.com/mohsanabbas/cart-microservice
 
 go 1.16
 

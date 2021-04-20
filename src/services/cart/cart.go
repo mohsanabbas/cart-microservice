@@ -1,8 +1,8 @@
 package cart
 
 import (
-	"github.com/mohsanabbas/ms-cart/src/domain/cart"
-	"github.com/mohsanabbas/ms-cart/src/repository/db"
+	"github.com/mohsanabbas/cart-microservice/src/domain/cart"
+	"github.com/mohsanabbas/cart-microservice/src/repository/db"
 	"github.com/mohsanabbas/ticketing_utils-go/rest_errors"
 )
 

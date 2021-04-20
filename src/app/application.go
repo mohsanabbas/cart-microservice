@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mohsanabbas/ms-cart/src/http"
-	"github.com/mohsanabbas/ms-cart/src/repository/db"
-	"github.com/mohsanabbas/ms-cart/src/services/cart"
+	"github.com/mohsanabbas/cart-microservice/src/http"
+	"github.com/mohsanabbas/cart-microservice/src/repository/db"
+	"github.com/mohsanabbas/cart-microservice/src/services/cart"
 	"github.com/mohsanabbas/ticketing_utils-go/logger"
 )
 var (

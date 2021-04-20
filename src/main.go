@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mohsanabbas/ms-cart/src/app"
+	"github.com/mohsanabbas/cart-microservice/src/app"
 )
 
 func main() {
