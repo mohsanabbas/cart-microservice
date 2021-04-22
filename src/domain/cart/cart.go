@@ -27,6 +27,11 @@ type Item struct {
 	Data map[string]interface{} `json:"data"`
 }
 
+type CartUpdate struct {
+	ModifiedCount int64 `json:"modifiedCount"`
+	Results       Cart  `json:"results"`
+}
+
 func (at *Cart) Validate() rest_errors.RestErr {
 
 	if at.Expire <= 0 {
@@ -42,6 +47,18 @@ func (at *Cart) SetCartExpiration() {
 func (id *Item) GenerateItemID() {
 	id.ID = primitive.NewObjectID()
 }
+
 func (at Cart) IsExpired() bool {
 	return time.Unix(at.Expire, 0).Before(time.Now().UTC())
+}
+
+func (at *Item) Validate() rest_errors.RestErr {
+	if at.Type == "" {
+		return rest_errors.NewBadRequestError("invalid product type")
+	}
+	if at.Data == nil {
+		return rest_errors.NewBadRequestError("product data can not be nil")
+	}
+
+	return nil
 }

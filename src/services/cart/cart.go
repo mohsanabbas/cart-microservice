@@ -11,6 +11,7 @@ import (
 type Service interface {
 	Create(cart.Cart) (*cart.Cart, rest_errors.RestErr)
 	GetById(string) (*cart.Cart, rest_errors.RestErr)
+	Update(string, cart.Item) (*cart.CartUpdate, rest_errors.RestErr)
 }
 
 type service struct {
@@ -47,4 +48,21 @@ func (s *service) GetById(id string) (*cart.Cart, rest_errors.RestErr) {
 		return nil, err
 	}
 	return cart, nil
+}
+
+func (s *service) Update(id string, request cart.Item) (*cart.CartUpdate, rest_errors.RestErr) {
+	if err := request.Validate(); err != nil {
+		return nil, err
+	}
+	id = strings.TrimSpace(id)
+	if len(id) == 0 {
+		return nil, rest_errors.NewBadRequestError("invalid cart id")
+	}
+	request.GenerateItemID()
+
+	cart, err := s.dbRepo.Update(id, request)
+	if err != nil {
+		return nil, err
+	}
+	return &cart, nil
 }

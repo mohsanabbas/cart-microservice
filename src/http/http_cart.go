@@ -12,6 +12,7 @@ import (
 type CartHandler interface {
 	Create(*gin.Context)
 	GetById(*gin.Context)
+	Update(*gin.Context)
 }
 
 type cartHandler struct {
@@ -24,6 +25,7 @@ func NewCartHandler(service cart.Service) CartHandler {
 	}
 }
 
+// Create cart handler
 func (handler *cartHandler) Create(c *gin.Context) {
 	request := atDomain.Cart{}
 
@@ -44,11 +46,32 @@ func (handler *cartHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, cart)
 }
 
+// Get handler
 func (handler *cartHandler) GetById(c *gin.Context) {
-	accessToken, err := handler.service.GetById(c.Param("id"))
+	cart, err := handler.service.GetById(c.Param("id"))
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return
 	}
-	c.JSON(http.StatusOK, accessToken)
+	c.JSON(http.StatusOK, cart)
+}
+
+// Update handler
+func (handler *cartHandler) Update(c *gin.Context) {
+	request := atDomain.Item{}
+	if err := c.BindJSON(&request); err != nil {
+		restErr := rest_errors.NewBadRequestError("invalid json body")
+		c.JSON(restErr.Status(), restErr)
+		return
+	}
+
+	cart, err := handler.service.Update(c.Param("id"), request)
+
+	if err != nil {
+		restErr := rest_errors.NewInternalServerError("iternal server error", err)
+		c.JSON(restErr.Status(), err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, cart)
 }
