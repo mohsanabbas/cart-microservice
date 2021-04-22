@@ -44,6 +44,7 @@ func StartApplication() {
 	router.POST("/cart", atHandler.Create)
 	router.GET("/cart/:id", atHandler.GetById)
 	router.PATCH("/cart/:id", atHandler.Update)
+	router.DELETE("/cart/:cartId/:itemId", atHandler.Delete)
 
 	if err := router.Run(config.ServerAddress); err != nil {
 		logger.Error(fmt.Sprintf("server has refused to start: %v", nil), err)

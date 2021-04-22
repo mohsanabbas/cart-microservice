@@ -13,6 +13,7 @@ type CartHandler interface {
 	Create(*gin.Context)
 	GetById(*gin.Context)
 	Update(*gin.Context)
+	Delete(*gin.Context)
 }
 
 type cartHandler struct {
@@ -74,4 +75,15 @@ func (handler *cartHandler) Update(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, cart)
+}
+
+// Delete
+func (handler *cartHandler) Delete(c *gin.Context) {
+
+	cart, err := handler.service.Delete(c.Param("cartId"), c.Param("itemId"))
+	if err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+	c.JSON(http.StatusOK, cart)
 }
