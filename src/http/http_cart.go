@@ -11,6 +11,7 @@ import (
 
 type CartHandler interface {
 	Create(*gin.Context)
+	GetById(*gin.Context)
 }
 
 type cartHandler struct {
@@ -23,10 +24,10 @@ func NewCartHandler(service cart.Service) CartHandler {
 	}
 }
 
-func (handler *cartHandler) Create(c *gin.Context)  {
-	var request atDomain.Items
+func (handler *cartHandler) Create(c *gin.Context) {
+	request := atDomain.Cart{}
 
-	if err := c.ShouldBindJSON(&request); err != nil {
+	if err := c.BindJSON(&request); err != nil {
 		restErr := rest_errors.NewBadRequestError("invalid json body")
 		c.JSON(restErr.Status(), restErr)
 		return
@@ -40,5 +41,14 @@ func (handler *cartHandler) Create(c *gin.Context)  {
 		return
 	}
 
- c.JSON(http.StatusCreated, cart)
+	c.JSON(http.StatusCreated, cart)
+}
+
+func (handler *cartHandler) GetById(c *gin.Context) {
+	accessToken, err := handler.service.GetById(c.Param("id"))
+	if err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+	c.JSON(http.StatusOK, accessToken)
 }
