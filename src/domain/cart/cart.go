@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/mohsanabbas/ticketing_utils-go/rest_errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -11,28 +12,20 @@ const (
 )
 
 type Cart struct {
-	ID           interface{} `json:"id,omitempty" bson:"_id,omitempty"`
-	Expire       int64       `json:"expire,omitempty" bson:"expire"`
-	Items        interface{} `json:"items,omitempty" bson:"items"`
-	Name         string      `json:"name,omitempty" bson:"name" `
-	AgentSign    string      `json:"agentSign,omitempty" bson:"agentSign"`
-	User         string      `json:"user,omitempty" bson:"user"`
-	BusinessUnit string      `json:"businessUnit,omitempty" bson:"businessUnit"`
+	ID           primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Expire       int64              `json:"expire,omitempty" bson:"expire"`
+	Items        []Item             `json:"items,omitempty" bson:"items"`
+	Name         string             `json:"name,omitempty" bson:"name" `
+	AgentSign    string             `json:"agentSign,omitempty" bson:"agentSign"`
+	User         string             `json:"user,omitempty" bson:"user"`
+	BusinessUnit string             `json:"businessUnit,omitempty" bson:"businessUnit"`
 }
 
-// type ItemRequest struct {
-// 	Type string      `json:"type"`
-// 	Data interface{} `json:"data"`
-// }
-
-// type Items struct {
-// 	Items []interface{} `json:"items,omitempty" bson:"items"`
-// }
-
-// type CartResponse struct {
-// 	Id    string        `json:"_id"`
-// 	Items []interface{} `json:"items"`
-// }
+type Item struct {
+	ID   primitive.ObjectID     `json:"id,omitempty" bson:"_id,omitempty"`
+	Type string                 `json:"type"`
+	Data map[string]interface{} `json:"data"`
+}
 
 func (at *Cart) Validate() rest_errors.RestErr {
 
@@ -45,6 +38,9 @@ func (at *Cart) Validate() rest_errors.RestErr {
 func (at *Cart) SetCartExpiration() {
 	at.Expire = time.Now().UTC().Add(expirationTime * time.Hour).Unix()
 
+}
+func (id *Item) GenerateItemID() {
+	id.ID = primitive.NewObjectID()
 }
 func (at Cart) IsExpired() bool {
 	return time.Unix(at.Expire, 0).Before(time.Now().UTC())
