@@ -78,7 +78,7 @@ $ make stop
 
 Commits: <https://www.conventionalcommits.org/en/v1.0.0/>
 
-Branching Model: <https://www.atlassian.com/br/git/tutorials/comparing-workflows/gitflow-workflow>
+Branching Model: <https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow>
 
 ## Swagger
 
