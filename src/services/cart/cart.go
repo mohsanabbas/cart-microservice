@@ -26,6 +26,9 @@ func NewService(dbRepo db.DbRepository) Service {
 func (s *service) Create(request cart.Cart) (*cart.Cart, rest_errors.RestErr) {
 
 	request.SetCartExpiration()
+	for k := range request.Items {
+		request.Items[k].GenerateItemID()
+	}
 	cart, err := s.dbRepo.Create(request)
 	if err != nil {
 		return nil, err
