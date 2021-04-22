@@ -6,6 +6,7 @@
 *.so
 *.dylib
 /app/app
+/engine/engine
 
 # Enviroment files
 *.env
