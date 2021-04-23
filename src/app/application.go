@@ -49,4 +49,8 @@ func StartApplication() {
 	if err := router.Run(config.ServerAddress); err != nil {
 		logger.Error(fmt.Sprintf("server has refused to start: %v", nil), err)
 	}
+	fmt.Println("Closing MongoDB Connection")
+	if err := session.Disconnect(ctx); err != nil {
+		logger.Error("Error on disconnection with MongoDB : %v", err)
+	}
 }
