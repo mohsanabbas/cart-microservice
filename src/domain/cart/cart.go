@@ -11,6 +11,7 @@ const (
 	expirationTime = 24
 )
 
+// Cart response structure
 type Cart struct {
 	ID           primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	Expire       int64              `json:"expire" bson:"expire"`
@@ -19,6 +20,7 @@ type Cart struct {
 	UserData     User               `json:"userData" bson:"userData"`
 }
 
+// User userData structue
 type User struct {
 	Credential struct {
 		Personid   int         `json:"personId" bson:"personId"`
@@ -35,70 +37,78 @@ type User struct {
 	Iat     int64         `json:"iat" bson:"iat"`
 }
 
+// Item structure
 type Item struct {
 	ID   primitive.ObjectID     `json:"id,omitempty" bson:"_id,omitempty"`
 	Type string                 `json:"type"`
 	Data map[string]interface{} `json:"data"`
 }
 
+// CartUpdate response structure after item update in cart
 type CartUpdate struct {
 	ModifiedCount int64 `json:"modifiedCount"`
 	Results       Cart  `json:"results"`
 }
 
+// RequestHeaders request headers
 type RequestHeaders struct {
 	UserToken    string `json:"gtw-sec-user-token"`
 	BusinessUnit string `json:"gtw-business-unit"`
 }
 
-func (at *Cart) Validate() rest_errors.RestErr {
+// ValidateExpiration validate expiry time
+func (ct *Cart) ValidateExpiration() rest_errors.RestErr {
 
-	if at.Expire <= 0 {
+	if ct.Expire <= 0 {
 		return rest_errors.NewBadRequestError("invalid expiration time")
 	}
 	return nil
 }
 
-func (at *Cart) SetCartExpiration() {
-	at.Expire = time.Now().UTC().Add(expirationTime * time.Hour).Unix()
+// SetCartExpiration set expiry time on cart
+func (ct *Cart) SetCartExpiration() {
+	ct.Expire = time.Now().UTC().Add(expirationTime * time.Hour).Unix()
 
 }
 
-func (id *Item) GenerateItemID() {
-	id.ID = primitive.NewObjectID()
+// GenerateItemID adds item "_id" in db
+func (it *Item) GenerateItemID() {
+	it.ID = primitive.NewObjectID()
 }
 
-func (at Cart) IsExpired() bool {
-	return time.Unix(at.Expire, 0).Before(time.Now().UTC())
+// IsExpired checks cart expiration time
+func (ct Cart) IsExpired() bool {
+	return time.Unix(ct.Expire, 0).Before(time.Now().UTC())
 }
 
-func (at *Item) Validate() rest_errors.RestErr {
-	if at.Type == "" {
+// Validate checks items request body
+func (it *Item) Validate() rest_errors.RestErr {
+	if it.Type == "" {
 		return rest_errors.NewBadRequestError("invalid product type")
 	}
-	if at.Data == nil {
+	if it.Data == nil {
 		return rest_errors.NewBadRequestError("product data can not be nil")
 	}
 	return nil
 }
 
-// Request headers validation
-func (at *RequestHeaders) ValidateHeaders() rest_errors.RestErr {
-	if len(at.UserToken) == 0 {
+// ValidateHeaders validate request headers
+func (rh *RequestHeaders) ValidateHeaders() rest_errors.RestErr {
+	if len(rh.UserToken) == 0 {
 		return rest_errors.NewBadRequestError("gtw-sec-user-token request header is required")
 	}
-	if at.BusinessUnit == "" {
+	if rh.BusinessUnit == "" {
 		return rest_errors.NewBadRequestError("gtw-business-unit request header is required")
 	}
 	return nil
 }
 
-// Set User data
+// SetUserData adds user data
 func (ct *Cart) SetUserData(credential User) {
 	ct.UserData = credential
 }
 
-// Set BusinessUnit
+// SetBusinessUnit adds business unit
 func (ct *Cart) SetBusinessUnit(bu string) {
 	ct.BusinessUnit = bu
 }

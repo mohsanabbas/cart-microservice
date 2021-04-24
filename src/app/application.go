@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mohsanabbas/cart-microservice/src/clients/mongo_db"
+	"github.com/mohsanabbas/cart-microservice/src/clients/mongo"
 	"github.com/mohsanabbas/cart-microservice/src/http"
 	"github.com/mohsanabbas/cart-microservice/src/repository/db"
 	"github.com/mohsanabbas/cart-microservice/src/services/cart"
@@ -17,6 +17,7 @@ var (
 	router = gin.Default()
 )
 
+// StartApplication app entry point
 func StartApplication() {
 	// Get app configs
 	config, err := config.GetConfig(".")
@@ -26,8 +27,16 @@ func StartApplication() {
 	// Create context
 	ctx := context.TODO()
 
-	// Instanciate mongo client
-	session := mongo_db.Connect(ctx, config)
+	// GetSession mongo client
+	session := mongo.GetSession()
+	defer func() {
+		// Close mongo client
+		logger.Info("Closing MongoDB Connection")
+		if err = session.Disconnect(ctx); err != nil {
+			logger.Error("Error on disconnection with MongoDB : %v",
+				err)
+		}
+	}()
 	client := session.Database(config.DBName).Collection(config.Collection)
 
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
@@ -36,9 +45,9 @@ func StartApplication() {
 	// Logger middleware
 	router.Use(gin.Logger())
 
-	// Create handler
+	// NewCartHandler create handler
 	atHandler := http.NewCartHandler(
-		cart.NewService(db.NewCartRepository(client, ctx)))
+		cart.NewService(db.NewCartRepository(ctx, client)))
 
 	// App endpoints
 	router.POST("/cart", atHandler.Create)
@@ -48,9 +57,5 @@ func StartApplication() {
 
 	if err := router.Run(config.ServerAddress); err != nil {
 		logger.Error(fmt.Sprintf("server has refused to start: %v", nil), err)
-	}
-	fmt.Println("Closing MongoDB Connection")
-	if err := session.Disconnect(ctx); err != nil {
-		logger.Error("Error on disconnection with MongoDB : %v", err)
 	}
 }

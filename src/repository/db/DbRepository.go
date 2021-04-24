@@ -11,10 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-const (
-	expirationTime = 24
-)
-
+// DbRepository respository interface
 type DbRepository interface {
 	Create(cart.Cart) (*cart.Cart, rest_errors.RestErr)
 	GetById(string) (*cart.Cart, rest_errors.RestErr)
@@ -23,18 +20,19 @@ type DbRepository interface {
 }
 
 type dbRepository struct {
-	col *mongo.Collection
 	ctx context.Context
+	col *mongo.Collection
 }
 
-func NewCartRepository(col *mongo.Collection, ctx context.Context) DbRepository {
+// NewCartRepository
+func NewCartRepository(ctx context.Context, col *mongo.Collection) DbRepository {
 	return &dbRepository{
-		col: col,
 		ctx: ctx,
+		col: col,
 	}
 }
 
-// Create
+// Create generate new cart
 func (r *dbRepository) Create(doc cart.Cart) (*cart.Cart, rest_errors.RestErr) {
 	res, err := r.col.InsertOne(r.ctx, doc)
 	if err != nil {
@@ -44,7 +42,7 @@ func (r *dbRepository) Create(doc cart.Cart) (*cart.Cart, rest_errors.RestErr) {
 	return r.GetById(id)
 }
 
-// Get
+// GetById find cart with "_id"
 func (r *dbRepository) GetById(id string) (*cart.Cart, rest_errors.RestErr) {
 	cart := cart.Cart{}
 
@@ -62,7 +60,7 @@ func (r *dbRepository) GetById(id string) (*cart.Cart, rest_errors.RestErr) {
 	return &cart, nil
 }
 
-// Update
+// Update insert item in existing cart by cartid
 func (r *dbRepository) Update(id string, update cart.Item) (*cart.CartUpdate, rest_errors.RestErr) {
 	result := cart.CartUpdate{
 		ModifiedCount: 0,
@@ -86,7 +84,7 @@ func (r *dbRepository) Update(id string, update cart.Item) (*cart.CartUpdate, re
 	return &result, nil
 }
 
-// Delete
+// Delete item in cart by "_id"
 func (r *dbRepository) Delete(cartId string, itemId string) (*cart.CartUpdate, rest_errors.RestErr) {
 	result := cart.CartUpdate{
 		ModifiedCount: 0,
