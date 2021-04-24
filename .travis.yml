@@ -16,7 +16,7 @@ git:
   depth: 10
 
 install:
-  - Makefile
+  - make setup && make engine
 
 script:
   - make setup && make engine
