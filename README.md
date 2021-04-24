@@ -1,8 +1,4 @@
 [![Build Status](https://travis-ci.org/skywinder/ActionSheetPicker-3.0.svg?branch=master)](https://travis-ci.org/skywinder/ActionSheetPicker-3.0)
-[![Quality Gate](https://sonar.app.cvc.com.br/api/project_badges/measure?project=shopping-cart-recomendations&metric=alert_status)](https://sonar.app.cvc.com.br/dashboard?id=shopping-cart-recomendations)
-[![Coverage](https://sonar.app.cvc.com.br/api/project_badges/measure?project=shopping-cart-recomendations&metric=coverage)](https://sonar.app.cvc.com.br/component_measures?id=shopping-cart-recomendations&metric=Coverage)
-[![Maintainnability](https://sonar.app.cvc.com.br/api/project_badges/measure?project=shopping-cart-recomendations&metric=sqale_rating)](https://sonar.app.cvc.com.br/component_measures?id=shopping-cart-recomendations&metric=Maintainability)
-[![Security](https://sonar.app.cvc.com.br/api/project_badges/measure?project=shopping-cart-recomendations&metric=security_rating)](https://sonar.app.cvc.com.br/component_measures?id=shopping-cart-recomendations&metric=Security)
 
 # SHOPPING-CART MICROSERVICE IN GO
 
