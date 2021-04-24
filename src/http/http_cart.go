@@ -9,6 +9,7 @@ import (
 	"github.com/mohsanabbas/ticketing_utils-go/rest_errors"
 )
 
+// CartHandler http handler interface
 type CartHandler interface {
 	Create(*gin.Context)
 	GetById(*gin.Context)
@@ -20,6 +21,7 @@ type cartHandler struct {
 	service cart.Service
 }
 
+// NewCartHandler
 func NewCartHandler(service cart.Service) CartHandler {
 	return &cartHandler{
 		service: service,
@@ -59,7 +61,7 @@ func (handler *cartHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, cart)
 }
 
-// Get handler
+// GetById handler
 func (handler *cartHandler) GetById(c *gin.Context) {
 	cart, err := handler.service.GetById(c.Param("id"))
 	if err != nil {
@@ -88,7 +90,7 @@ func (handler *cartHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, cart)
 }
 
-// Delete
+// Delete handler
 func (handler *cartHandler) Delete(c *gin.Context) {
 
 	cart, err := handler.service.Delete(c.Param("cartId"), c.Param("itemId"))

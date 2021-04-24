@@ -11,6 +11,7 @@ import (
 	"github.com/mohsanabbas/ticketing_utils-go/rest_errors"
 )
 
+// Service interface
 type Service interface {
 	Create(cart.Cart, cart.RequestHeaders) (*cart.Cart, rest_errors.RestErr)
 	GetById(string) (*cart.Cart, rest_errors.RestErr)
@@ -22,12 +23,14 @@ type service struct {
 	dbRepo db.DbRepository
 }
 
+// NewService
 func NewService(dbRepo db.DbRepository) Service {
 	return &service{
 		dbRepo: dbRepo,
 	}
 }
 
+// Create service method
 func (s *service) Create(request cart.Cart, rh cart.RequestHeaders) (*cart.Cart, rest_errors.RestErr) {
 
 	request.SetCartExpiration()
@@ -52,6 +55,7 @@ func (s *service) Create(request cart.Cart, rh cart.RequestHeaders) (*cart.Cart,
 	return cart, nil
 }
 
+// GetById service method
 func (s *service) GetById(id string) (*cart.Cart, rest_errors.RestErr) {
 	id = strings.TrimSpace(id)
 	if len(id) == 0 {
@@ -64,6 +68,7 @@ func (s *service) GetById(id string) (*cart.Cart, rest_errors.RestErr) {
 	return cart, nil
 }
 
+// Update service method
 func (s *service) Update(id string, request cart.Item) (*cart.CartUpdate, rest_errors.RestErr) {
 	if err := request.Validate(); err != nil {
 		return nil, err
@@ -81,7 +86,7 @@ func (s *service) Update(id string, request cart.Item) (*cart.CartUpdate, rest_e
 	return cart, nil
 }
 
-// Delete
+// Delete service method
 func (s *service) Delete(cartId string, itemId string) (*cart.CartUpdate, rest_errors.RestErr) {
 
 	cartId = strings.TrimSpace(cartId)
