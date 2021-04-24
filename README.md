@@ -79,7 +79,7 @@ Branching Model: <https://www.atlassian.com/git/tutorials/comparing-workflows/gi
 
 ## Swagger
 
-not yet
+Not yet
 
 ## Authors
 
