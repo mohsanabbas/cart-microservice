@@ -9,7 +9,7 @@ import (
 	"github.com/mohsanabbas/cart-microservice/src/http"
 	"github.com/mohsanabbas/cart-microservice/src/repository/db"
 	"github.com/mohsanabbas/cart-microservice/src/services/cart"
-	"github.com/mohsanabbas/cart-microservice/src/util"
+	"github.com/mohsanabbas/cart-microservice/src/util/config"
 	"github.com/mohsanabbas/ticketing_utils-go/logger"
 )
 
@@ -19,7 +19,7 @@ var (
 
 func StartApplication() {
 	// Get app configs
-	config, err := util.GetConfig(".")
+	config, err := config.GetConfig(".")
 	if err != nil {
 		logger.Error("connot load config:", err)
 	}

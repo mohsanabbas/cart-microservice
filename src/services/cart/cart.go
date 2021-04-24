@@ -1,15 +1,18 @@
 package cart
 
 import (
+	"encoding/json"
+	"errors"
 	"strings"
 
 	"github.com/mohsanabbas/cart-microservice/src/domain/cart"
 	"github.com/mohsanabbas/cart-microservice/src/repository/db"
+	"github.com/mohsanabbas/cart-microservice/src/util/decrypt"
 	"github.com/mohsanabbas/ticketing_utils-go/rest_errors"
 )
 
 type Service interface {
-	Create(cart.Cart) (*cart.Cart, rest_errors.RestErr)
+	Create(cart.Cart, cart.RequestHeaders) (*cart.Cart, rest_errors.RestErr)
 	GetById(string) (*cart.Cart, rest_errors.RestErr)
 	Update(string, cart.Item) (*cart.CartUpdate, rest_errors.RestErr)
 	Delete(string, string) (*cart.CartUpdate, rest_errors.RestErr)
@@ -25,9 +28,19 @@ func NewService(dbRepo db.DbRepository) Service {
 	}
 }
 
-func (s *service) Create(request cart.Cart) (*cart.Cart, rest_errors.RestErr) {
+func (s *service) Create(request cart.Cart, rh cart.RequestHeaders) (*cart.Cart, rest_errors.RestErr) {
 
 	request.SetCartExpiration()
+	request.SetBusinessUnit(rh.BusinessUnit)
+	credential := cart.User{}
+	decoded := decrypt.Decrypt(rh.UserToken)
+	if err := json.Unmarshal(decoded, &credential); err != nil {
+		return nil,
+			rest_errors.NewInternalServerError("Invalid gtw-user-token",
+				errors.New("json parsing error"))
+	}
+	request.SetUserData(credential)
+
 	for k := range request.Items {
 		request.Items[k].GenerateItemID()
 	}

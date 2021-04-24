@@ -21,6 +21,7 @@ type DbRepository interface {
 	Update(string, cart.Item) (*cart.CartUpdate, rest_errors.RestErr)
 	Delete(string, string) (*cart.CartUpdate, rest_errors.RestErr)
 }
+
 type dbRepository struct {
 	col *mongo.Collection
 	ctx context.Context
@@ -106,6 +107,9 @@ func (r *dbRepository) Delete(cartId string, itemId string) (*cart.CartUpdate, r
 	updCart, err := r.GetById(cartId)
 	if err != nil {
 		return nil, rest_errors.NewInternalServerError("cart not found", err)
+	}
+	if res.ModifiedCount == 0 {
+		return nil, rest_errors.NewInternalServerError("Item not found", errors.New("Item does not exist"))
 	}
 	result.ModifiedCount = res.ModifiedCount
 	result.Results = *updCart

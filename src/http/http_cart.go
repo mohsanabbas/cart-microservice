@@ -28,6 +28,18 @@ func NewCartHandler(service cart.Service) CartHandler {
 
 // Create cart handler
 func (handler *cartHandler) Create(c *gin.Context) {
+	gtwUserToken := c.Request.Header.Get("gtw-sec-user-token")
+	gtwBusinessUnit := c.Request.Header.Get("gtw-business-unit")
+
+	rh := atDomain.RequestHeaders{
+		UserToken:    gtwUserToken,
+		BusinessUnit: gtwBusinessUnit,
+	}
+	if err := rh.ValidateHeaders(); err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+
 	request := atDomain.Cart{}
 
 	if err := c.BindJSON(&request); err != nil {
@@ -36,7 +48,7 @@ func (handler *cartHandler) Create(c *gin.Context) {
 		return
 	}
 
-	cart, err := handler.service.Create(request)
+	cart, err := handler.service.Create(request, rh)
 
 	if err != nil {
 		restErr := rest_errors.NewInternalServerError("iternal server error", err)
@@ -67,14 +79,13 @@ func (handler *cartHandler) Update(c *gin.Context) {
 	}
 
 	cart, err := handler.service.Update(c.Param("id"), request)
-
 	if err != nil {
 		restErr := rest_errors.NewInternalServerError("iternal server error", err)
 		c.JSON(restErr.Status(), err)
 		return
 	}
 
-	c.JSON(http.StatusCreated, cart)
+	c.JSON(http.StatusOK, cart)
 }
 
 // Delete
