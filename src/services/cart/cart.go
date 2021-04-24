@@ -23,7 +23,7 @@ type service struct {
 	dbRepo db.DbRepository
 }
 
-// NewService
+// NewService construct service
 func NewService(dbRepo db.DbRepository) Service {
 	return &service{
 		dbRepo: dbRepo,

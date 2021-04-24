@@ -21,7 +21,7 @@ type cartHandler struct {
 	service cart.Service
 }
 
-// NewCartHandler
+// NewCartHandler construct http handlers
 func NewCartHandler(service cart.Service) CartHandler {
 	return &cartHandler{
 		service: service,

@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// DbRepository respository interface
+// DbRepository repository interface
 type DbRepository interface {
 	Create(cart.Cart) (*cart.Cart, rest_errors.RestErr)
 	GetById(string) (*cart.Cart, rest_errors.RestErr)
@@ -24,7 +24,7 @@ type dbRepository struct {
 	col *mongo.Collection
 }
 
-// NewCartRepository
+// NewCartRepository construct repoitory
 func NewCartRepository(ctx context.Context, col *mongo.Collection) DbRepository {
 	return &dbRepository{
 		ctx: ctx,
