@@ -16,7 +16,7 @@ git:
   depth: 10
 
 install:
-  - apk update && apk upgrade && \apk --update add git make && \apk add --no-cache openssh
+  - Makefile
 
 script:
   - make setup && make engine
