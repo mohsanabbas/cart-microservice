@@ -4,8 +4,8 @@ FROM golang:1.16.0-alpine3.13 as builder
 WORKDIR /src
 
 RUN apk update && apk upgrade && \
-  apk --update add git make && \
-  apk add --no-cache openssh
+  apk add git make && \
+  apk add --no-cache --virtual openssh
 
 COPY . .
 
