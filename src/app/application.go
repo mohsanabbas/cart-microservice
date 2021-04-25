@@ -25,18 +25,11 @@ func StartApplication() {
 		logger.Error("connot load config:", err)
 	}
 	// Create context
-	ctx := context.TODO()
+	ctx := context.Background()
 
-	// GetSession mongo client
+	// GetSession gets mongo client
 	session := mongo.GetSession()
-	defer func() {
-		// Close mongo client
-		logger.Info("Closing MongoDB Connection")
-		if err = session.Disconnect(ctx); err != nil {
-			logger.Error("Error on disconnection with MongoDB : %v",
-				err)
-		}
-	}()
+	defer session.Disconnect(ctx)
 	client := session.Database(config.DBName).Collection(config.Collection)
 
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
