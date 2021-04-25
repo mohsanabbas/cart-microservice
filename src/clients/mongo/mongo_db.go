@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/mohsanabbas/cart-microservice/src/util/config"
 	"github.com/mohsanabbas/ticketing_utils-go/logger"
@@ -33,10 +34,14 @@ func init() {
 		config.DBPass,
 		config.DBSource)
 
+	// context for connection timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	// Connect to Mongo:
 	connection := options.Client().ApplyURI(uri)
 	if session, err = mongo.Connect(ctx, connection); err != nil {
-		panic(err)
+		logger.Error("Error connecting to database:%v", err)
 	}
 }
 
