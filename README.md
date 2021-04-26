@@ -55,20 +55,27 @@ $ make coverage
 $ make setup
 ```
 
+```bash
+# Run service locally (it executes "go run src/main.go")
+$ make run
+```
+
 ### Docker
 
 ```bash
+
 # Build the docker image first
 $ make docker
-
-# Run the application
-$ make run
 
 # check if the containers are running
 $ docker ps -a
 
-# Stop
+# Run the build image with docker compose
+$ make run-dc
+
+# Stop docker compose
 $ make stop
+
 ```
 
 ## Coding Style

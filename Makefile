@@ -32,8 +32,11 @@ clean:
 docker:
 	docker build -t cart-microservice .
 
-run:
+run-dc:
 	docker-compose up --build -d
+
+run:
+	go run src/main.go
 
 stop:
 	docker-compose down
