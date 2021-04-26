@@ -3,7 +3,7 @@
 
 # SHOPPING-CART MICROSERVICE IN GO
 
-Shopping cart microservice written in `GO` to perform CRUD operations.
+Shopping cart microservice written in [GO](https://golang.org/) to perform CRUD operations.
 
 ## .env examle
 
