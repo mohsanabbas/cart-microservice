@@ -1,4 +1,4 @@
-[![Build status](https://github.com/mohsanabbas/cart-microservice/actions/workflows/go.yml/badge.svg?branch=release&event=push)](https://github.com/mohsanabbas/cart-microservice/actions/workflows/go.yml)
+[![Build](https://github.com/mohsanabbas/cart-microservice/actions/workflows/build.yml/badge.svg)](https://github.com/mohsanabbas/cart-microservice/actions/workflows/build.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mohsanabbas/cart-microservice)](https://goreportcard.com/report/github.com/mohsanabbas/cart-microservice)
 
 # SHOPPING-CART MICROSERVICE IN GO
