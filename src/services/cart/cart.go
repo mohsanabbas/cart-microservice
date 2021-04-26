@@ -8,7 +8,7 @@ import (
 	"github.com/mohsanabbas/cart-microservice/src/domain/cart"
 	"github.com/mohsanabbas/cart-microservice/src/repository/db"
 	"github.com/mohsanabbas/cart-microservice/src/util/decrypt"
-	"github.com/mohsanabbas/ticketing_utils-go/rest_errors"
+	"github.com/mohsanabbas/cart-microservice/src/util/rest_errors"
 )
 
 // Service interface

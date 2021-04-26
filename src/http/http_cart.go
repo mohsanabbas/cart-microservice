@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	atDomain "github.com/mohsanabbas/cart-microservice/src/domain/cart"
 	"github.com/mohsanabbas/cart-microservice/src/services/cart"
-	"github.com/mohsanabbas/ticketing_utils-go/rest_errors"
+	"github.com/mohsanabbas/cart-microservice/src/util/rest_errors"
 )
 
 // CartHandler http handler interface

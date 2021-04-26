@@ -10,7 +10,7 @@ import (
 	"github.com/mohsanabbas/cart-microservice/src/repository/db"
 	"github.com/mohsanabbas/cart-microservice/src/services/cart"
 	"github.com/mohsanabbas/cart-microservice/src/util/config"
-	"github.com/mohsanabbas/ticketing_utils-go/logger"
+	"github.com/mohsanabbas/cart-microservice/src/util/logger"
 )
 
 var (
