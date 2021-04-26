@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/mohsanabbas/cart-microservice/src/domain/cart"
-	"github.com/mohsanabbas/ticketing_utils-go/rest_errors"
+	"github.com/mohsanabbas/cart-microservice/src/util/rest_errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -52,9 +52,8 @@ func (r *dbRepository) GetById(id string) (*cart.Cart, rest_errors.RestErr) {
 	}
 
 	filter := bson.M{"_id": _id}
-	err = r.col.FindOne(r.ctx, filter).Decode(&cart)
-	if err != nil {
-		return nil, rest_errors.NewInternalServerError("error finding cart in database", err)
+	if err := r.col.FindOne(r.ctx, filter).Decode(&cart); err != nil {
+		return nil, rest_errors.NewNotFoundError("Cart not found in database")
 	}
 
 	return &cart, nil
@@ -77,7 +76,7 @@ func (r *dbRepository) Update(id string, update cart.Item) (*cart.CartUpdate, re
 
 	updCart, err := r.GetById(id)
 	if err != nil {
-		return nil, rest_errors.NewInternalServerError("updated cart not found", err)
+		return nil, rest_errors.NewInternalServerError("cart not found", err)
 	}
 	result.ModifiedCount = res.ModifiedCount
 	result.Results = *updCart
@@ -91,11 +90,11 @@ func (r *dbRepository) Delete(cartId string, itemId string) (*cart.CartUpdate, r
 	}
 	_cartId, err := primitive.ObjectIDFromHex(cartId)
 	if err != nil {
-		return nil, rest_errors.NewInternalServerError("Error ", err)
+		return nil, rest_errors.NewInternalServerError("Error while converting string id to `ObjectID`", err)
 	}
 	_itemId, err := primitive.ObjectIDFromHex(itemId)
 	if err != nil {
-		return nil, rest_errors.NewInternalServerError("Error ", err)
+		return nil, rest_errors.NewInternalServerError("Error while converting string id to `ObjectID`", err)
 	}
 	filter := bson.M{"$pull": bson.M{"items": bson.M{"_id": _itemId}}}
 	res, err := r.col.UpdateOne(r.ctx, bson.M{"_id": _cartId}, filter)

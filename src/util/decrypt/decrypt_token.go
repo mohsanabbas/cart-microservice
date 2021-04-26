@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"strings"
 
-	"github.com/mohsanabbas/ticketing_utils-go/logger"
+	"github.com/mohsanabbas/cart-microservice/src/util/logger"
 )
 
 // Decrypt jwt token

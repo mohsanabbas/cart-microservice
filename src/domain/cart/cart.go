@@ -3,7 +3,7 @@ package cart
 import (
 	"time"
 
-	"github.com/mohsanabbas/ticketing_utils-go/rest_errors"
+	"github.com/mohsanabbas/cart-microservice/src/util/rest_errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/mohsanabbas/cart-microservice/src/util/config"
-	"github.com/mohsanabbas/ticketing_utils-go/logger"
+	"github.com/mohsanabbas/cart-microservice/src/util/logger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
