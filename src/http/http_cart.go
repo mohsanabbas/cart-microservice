@@ -30,22 +30,17 @@ func NewCartHandler(service cart.Service) CartHandler {
 
 // Create cart handler
 func (handler *cartHandler) Create(c *gin.Context) {
-	gtwUserToken := c.Request.Header.Get("gtw-sec-user-token")
-	gtwBusinessUnit := c.Request.Header.Get("gtw-business-unit")
-
-	rh := atDomain.RequestHeaders{
-		UserToken:    gtwUserToken,
-		BusinessUnit: gtwBusinessUnit,
-	}
-	if err := rh.ValidateHeaders(); err != nil {
-		c.JSON(err.Status(), err)
+	rh := atDomain.RequestHeaders{}
+	if err := c.ShouldBindHeader(&rh); err != nil {
+		restErr := rest_errors.NewBadRequestError("Invalid request headers")
+		c.JSON(restErr.Status(), restErr)
 		return
 	}
 
 	request := atDomain.Cart{}
 
 	if err := c.BindJSON(&request); err != nil {
-		restErr := rest_errors.NewBadRequestError("invalid json body")
+		restErr := rest_errors.NewBadRequestError("Invalid json body")
 		c.JSON(restErr.Status(), restErr)
 		return
 	}
@@ -53,7 +48,7 @@ func (handler *cartHandler) Create(c *gin.Context) {
 	cart, err := handler.service.Create(request, rh)
 
 	if err != nil {
-		restErr := rest_errors.NewInternalServerError("iternal server error", err)
+		restErr := rest_errors.NewInternalServerError("Internal server error", err)
 		c.JSON(restErr.Status(), err)
 		return
 	}
@@ -75,14 +70,14 @@ func (handler *cartHandler) GetById(c *gin.Context) {
 func (handler *cartHandler) Update(c *gin.Context) {
 	request := atDomain.Item{}
 	if err := c.BindJSON(&request); err != nil {
-		restErr := rest_errors.NewBadRequestError("invalid json body")
+		restErr := rest_errors.NewBadRequestError("Invalid json body")
 		c.JSON(restErr.Status(), restErr)
 		return
 	}
 
 	cart, err := handler.service.Update(c.Param("id"), request)
 	if err != nil {
-		restErr := rest_errors.NewInternalServerError("iternal server error", err)
+		restErr := rest_errors.NewInternalServerError("Internal server error", err)
 		c.JSON(restErr.Status(), err)
 		return
 	}
@@ -92,7 +87,6 @@ func (handler *cartHandler) Update(c *gin.Context) {
 
 // Delete handler
 func (handler *cartHandler) Delete(c *gin.Context) {
-
 	cart, err := handler.service.Delete(c.Param("cartId"), c.Param("itemId"))
 	if err != nil {
 		c.JSON(err.Status(), err)

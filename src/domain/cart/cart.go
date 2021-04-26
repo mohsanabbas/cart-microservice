@@ -52,8 +52,8 @@ type CartUpdate struct {
 
 // RequestHeaders request headers
 type RequestHeaders struct {
-	UserToken    string `json:"gtw-sec-user-token"`
-	BusinessUnit string `json:"gtw-business-unit"`
+	UserToken    string `header:"gtw-sec-user-token" binding:"required"`
+	BusinessUnit string `header:"gtw-business-unit" binding:"required"`
 }
 
 // ValidateExpiration validate expiry time
@@ -88,17 +88,6 @@ func (it *Item) Validate() rest_errors.RestErr {
 	}
 	if it.Data == nil {
 		return rest_errors.NewBadRequestError("product data can not be nil")
-	}
-	return nil
-}
-
-// ValidateHeaders validate request headers
-func (rh *RequestHeaders) ValidateHeaders() rest_errors.RestErr {
-	if len(rh.UserToken) == 0 {
-		return rest_errors.NewBadRequestError("gtw-sec-user-token request header is required")
-	}
-	if rh.BusinessUnit == "" {
-		return rest_errors.NewBadRequestError("gtw-business-unit request header is required")
 	}
 	return nil
 }
