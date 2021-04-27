@@ -17,6 +17,7 @@ type DbRepository interface {
 	GetById(string) (*cart.Cart, rest_errors.RestErr)
 	Update(string, cart.Item) (*cart.CartUpdate, rest_errors.RestErr)
 	Delete(string, string) (*cart.CartUpdate, rest_errors.RestErr)
+	DeleteAll(string) (*cart.CartUpdate, rest_errors.RestErr)
 }
 
 type dbRepository struct {
@@ -107,6 +108,30 @@ func (r *dbRepository) Delete(cartId string, itemId string) (*cart.CartUpdate, r
 	}
 	if res.ModifiedCount == 0 {
 		return nil, rest_errors.NewInternalServerError("Item not found", errors.New("Item does not exist"))
+	}
+	result.ModifiedCount = res.ModifiedCount
+	result.Results = *updCart
+	return &result, nil
+}
+
+// DeleteAll clear cart items
+func (r *dbRepository) DeleteAll(cartId string) (*cart.CartUpdate, rest_errors.RestErr) {
+	result := cart.CartUpdate{
+		ModifiedCount: 0,
+	}
+	_cartId, err := primitive.ObjectIDFromHex(cartId)
+	if err != nil {
+		return nil, rest_errors.NewInternalServerError("Error while converting string id to `ObjectID`", err)
+	}
+	clear := make([]interface{}, 0)
+	filter := bson.M{"$set": bson.M{"items": clear}}
+	res, err := r.col.UpdateOne(r.ctx, bson.M{"_id": _cartId}, filter)
+	if err != nil {
+		return nil, rest_errors.NewInternalServerError("Error while clearing cart", err)
+	}
+	updCart, err := r.GetById(cartId)
+	if err != nil {
+		return nil, rest_errors.NewInternalServerError("cart not found", err)
 	}
 	result.ModifiedCount = res.ModifiedCount
 	result.Results = *updCart

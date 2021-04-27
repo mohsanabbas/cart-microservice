@@ -17,6 +17,7 @@ type Service interface {
 	GetById(string) (*cart.Cart, rest_errors.RestErr)
 	Update(string, cart.Item) (*cart.CartUpdate, rest_errors.RestErr)
 	Delete(string, string) (*cart.CartUpdate, rest_errors.RestErr)
+	DeleteAll(string) (*cart.CartUpdate, rest_errors.RestErr)
 }
 
 type service struct {
@@ -98,6 +99,21 @@ func (s *service) Delete(cartId string, itemId string) (*cart.CartUpdate, rest_e
 		return nil, rest_errors.NewBadRequestError("invalid cart id")
 	}
 	cart, err := s.dbRepo.Delete(cartId, itemId)
+	if err != nil {
+		return nil, err
+	}
+	return cart, nil
+}
+
+// DeleteAll service method
+func (s *service) DeleteAll(cartId string) (*cart.CartUpdate, rest_errors.RestErr) {
+
+	cartId = strings.TrimSpace(cartId)
+	if len(cartId) == 0 {
+		return nil, rest_errors.NewBadRequestError("invalid cart id")
+	}
+
+	cart, err := s.dbRepo.DeleteAll(cartId)
 	if err != nil {
 		return nil, err
 	}
