@@ -8,7 +8,7 @@ import (
 	"github.com/mohsanabbas/cart-microservice/src/clients/mongo"
 	"github.com/mohsanabbas/cart-microservice/src/http"
 	"github.com/mohsanabbas/cart-microservice/src/repository/db"
-	"github.com/mohsanabbas/cart-microservice/src/services/cart"
+	"github.com/mohsanabbas/cart-microservice/src/usecases/cart"
 	"github.com/mohsanabbas/cart-microservice/src/util/config"
 	"github.com/mohsanabbas/cart-microservice/src/util/logger"
 )
@@ -40,7 +40,7 @@ func StartApplication() {
 
 	// NewCartHandler create handler
 	atHandler := http.NewCartHandler(
-		cart.NewService(db.NewCartRepository(ctx, client)))
+		cart.NewUsecase(db.NewCartRepository(ctx, client)))
 
 	// App endpoints
 	router.POST("/cart", atHandler.Create)

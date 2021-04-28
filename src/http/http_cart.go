@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	atDomain "github.com/mohsanabbas/cart-microservice/src/domain/cart"
-	"github.com/mohsanabbas/cart-microservice/src/services/cart"
+	"github.com/mohsanabbas/cart-microservice/src/usecases/cart"
 	"github.com/mohsanabbas/cart-microservice/src/util/rest_errors"
 )
 
@@ -19,13 +19,13 @@ type CartHandler interface {
 }
 
 type cartHandler struct {
-	service cart.Service
+	CUsecase cart.Usecase
 }
 
 // NewCartHandler construct http handlers
-func NewCartHandler(service cart.Service) CartHandler {
+func NewCartHandler(uc cart.Usecase) CartHandler {
 	return &cartHandler{
-		service: service,
+		CUsecase: uc,
 	}
 }
 
@@ -46,7 +46,7 @@ func (handler *cartHandler) Create(c *gin.Context) {
 		return
 	}
 
-	cart, err := handler.service.Create(request, rh)
+	cart, err := handler.CUsecase.Create(request, rh)
 
 	if err != nil {
 		restErr := rest_errors.NewInternalServerError("Internal server error", err)
@@ -59,7 +59,7 @@ func (handler *cartHandler) Create(c *gin.Context) {
 
 // GetById handler
 func (handler *cartHandler) GetById(c *gin.Context) {
-	cart, err := handler.service.GetById(c.Param("id"))
+	cart, err := handler.CUsecase.GetById(c.Param("id"))
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return
@@ -76,7 +76,7 @@ func (handler *cartHandler) Update(c *gin.Context) {
 		return
 	}
 
-	cart, err := handler.service.Update(c.Param("id"), request)
+	cart, err := handler.CUsecase.Update(c.Param("id"), request)
 	if err != nil {
 		restErr := rest_errors.NewInternalServerError("Internal server error", err)
 		c.JSON(restErr.Status(), err)
@@ -88,7 +88,7 @@ func (handler *cartHandler) Update(c *gin.Context) {
 
 // Delete handler
 func (handler *cartHandler) Delete(c *gin.Context) {
-	cart, err := handler.service.Delete(c.Param("cartId"), c.Param("itemId"))
+	cart, err := handler.CUsecase.Delete(c.Param("cartId"), c.Param("itemId"))
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return
@@ -97,7 +97,7 @@ func (handler *cartHandler) Delete(c *gin.Context) {
 }
 
 func (handler *cartHandler) DeleteAll(c *gin.Context) {
-	cart, err := handler.service.DeleteAll(c.Param("cartId"))
+	cart, err := handler.CUsecase.DeleteAll(c.Param("cartId"))
 	if err != nil {
 		c.JSON(err.Status(), err)
 		return
