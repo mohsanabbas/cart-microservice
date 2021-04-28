@@ -21,7 +21,7 @@ func (s *usecase) Create(request cart.Cart, rh cart.RequestHeaders) (*cart.Cart,
 			rest_errors.NewInternalServerError("Invalid gtw-user-token",
 				errors.New("json parsing error"))
 	}
-	request.SetUserData(credential)
+	request.SetAgentSign(credential)
 
 	for k := range request.Items {
 		request.Items[k].GenerateItemID()

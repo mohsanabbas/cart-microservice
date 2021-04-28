@@ -17,7 +17,9 @@ type Cart struct {
 	Expire       int64              `json:"expire" bson:"expire"`
 	Items        []Item             `json:"items" bson:"items"`
 	BusinessUnit string             `json:"businessUnit" bson:"businessUnit"`
-	UserData     User               `json:"userData" bson:"userData"`
+	// UserData     User               `json:"userData" bson:"userData"`
+	Agentsign string `json:"agentSign" bson:"agentSign"`
+	User      string `json:"user" bson:"user"`
 }
 
 // User userData structue
@@ -93,11 +95,18 @@ func (it *Item) Validate() rest_errors.RestErr {
 }
 
 // SetUserData adds user data
-func (ct *Cart) SetUserData(credential User) {
+/*func (ct *Cart) SetUserData(credential User) {
 	ct.UserData = credential
-}
+}*/
 
 // SetBusinessUnit adds business unit
 func (ct *Cart) SetBusinessUnit(bu string) {
 	ct.BusinessUnit = bu
+}
+
+// SetAgentSign sets user and agent sign
+func (ct *Cart) SetAgentSign(credential User) {
+	ct.Agentsign = credential.Credential.Agentsign
+	ct.User = credential.Credential.User
+
 }
