@@ -71,7 +71,7 @@ func (handler *cartHandler) GetById(c *gin.Context) {
 func (handler *cartHandler) Update(c *gin.Context) {
 	request := atDomain.Item{}
 	if err := c.BindJSON(&request); err != nil {
-		restErr := rest_errors.NewBadRequestError("Invalid json body")
+		restErr := rest_errors.NewBadRequestError(err.Error())
 		c.JSON(restErr.Status(), restErr)
 		return
 	}

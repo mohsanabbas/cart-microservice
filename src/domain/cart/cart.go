@@ -42,8 +42,8 @@ type User struct {
 // Item structure
 type Item struct {
 	ID   primitive.ObjectID     `json:"id,omitempty" bson:"_id,omitempty"`
-	Type string                 `json:"type"`
-	Data map[string]interface{} `json:"data"`
+	Type string                 `json:"type" binding:"required"`
+	Data map[string]interface{} `json:"data" binding:"required"`
 }
 
 // CartUpdate response structure after item update in cart
